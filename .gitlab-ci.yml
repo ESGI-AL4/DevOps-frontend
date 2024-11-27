@@ -1,0 +1,23 @@
+stages:
+    - test
+    - build
+
+unit-test:
+    stage: test
+    image: debian
+    script:
+        - echo 'Test de job'
+        - ls
+
+unit-test-2:
+    stage: test
+    image: debian
+    script:
+        - echo 'Test de job'
+        - ls
+
+build:
+    stage: build
+    image: debian
+    script:
+        - echo 'Job de build'

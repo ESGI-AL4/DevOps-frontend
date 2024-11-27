@@ -4,17 +4,10 @@ stages:
 
 unit-test:
     stage: test
-    image: debian
+    image: node:22
     script:
-        - echo 'Test de job'
-        - ls
-
-unit-test-2:
-    stage: test
-    image: debian
-    script:
-        - echo 'Test de job'
-        - ls
+        - npm install
+        - npm run test:unit
 
 build:
     stage: build

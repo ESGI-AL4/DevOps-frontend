@@ -66,7 +66,7 @@ onMounted(() => {
 <template>
   <div id="articles-title">
     <TitleWithBackButton title="Articles" />
-    <PrimeButton @click="navigateToArticlesForm">Add an article</PrimeButton>
+    <PrimeButton @click="navigateToArticlesForm" data-cy-role="add-article">Add an article</PrimeButton>
   </div>
   <template v-if="isLoadingArticles">
     <div style="display: flex; flex-direction: column; gap: 10px">

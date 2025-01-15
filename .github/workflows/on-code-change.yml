@@ -48,6 +48,48 @@ jobs:
                 file: ./Dockerfile
                 push: true
                 tags: ${{ secrets.DOCKER_USERNAME }}/devops_front:${{ github.head_ref }}
+    test-e2e:
+        needs: build
+        name: E2E test
+        runs-on: ubuntu-latest
+        services:
+            db:
+              image: postgres:17.2
+              env: 
+                POSTGRES_DB: ${{ secrets.POSTGRES_DB}}
+                POSTGRES_USER: ${{ secrets.POSTGRES_USER}}
+                POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+              ports:
+                - "5432:5432"
+              volumes:
+                - db_data:/var/lib/postgresql/data
+            api:
+              image: ${{ secrets.DOCKER_USERNAME }}/devops_back:latest
+              env:
+                DATABASE_URL: postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@db:5432/${{ secrets.POSTGRES_DB }}
+                DB_HOST: db
+                DB_PORT: 5432
+                DB_NAME: ${{ secrets.POSTGRES_DB }}
+                DB_USER: ${{ secrets.POSTGRES_USER }}
+                DB_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+              ports:
+                - "8000:8000"
+            web:
+              image: ${{ secrets.DOCKER_USERNAME }}/devops_front:${{ github.head_ref }}
+              env:
+                VITE_BACKEND_API: http://api:8000
+              ports:
+                - "80:80"
+        steps:
+            - uses: actions/checkout@v4
+            - name: Go to tests folder and install dependencies
+              run: |
+                cd tests
+                npm install
+            - name: Run e2e tests
+              run: |
+                cd tests
+                npm run e2e:ci
 
 
             

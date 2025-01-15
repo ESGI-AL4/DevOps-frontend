@@ -1,4 +1,32 @@
 services:
+  db:
+    image: postgres:17.2
+    environment:
+      POSTGRES_DB: articles_db
+      POSTGRES_USER: articles_user
+      POSTGRES_PASSWORD: articles_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U articles_user"]
+      timeout: 30s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  python:
+    image: baguette42/devops_back:latest
+    environment:
+        - DATABASE_URL=postgres://articles_user:articles_password@db:5432/articles_db
+        - DB_HOST=db
+        - DB_PORT=5432
+        - DB_NAME=articles_db
+        - DB_USER=articles_user
+        - DB_PASSWORD=articles_password
+    depends_on:
+        db: 
+          condition: service_healthy
+    ports:
+      - "8000:8000"
   server:
     build:
       context: .
@@ -7,4 +35,10 @@ services:
     tty: true
     stdin_open: true
     restart: unless-stopped
-    
+    environment:
+      - VITE_BACKEND_API=http://python:8000
+    ports:
+      - "80:80"
+
+volumes:
+  db_data:

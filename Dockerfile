@@ -13,7 +13,8 @@ COPY --chown=node:node . .
 RUN npm run build
 
 # Production
-FROM base as prod
-COPY --from=build --chown=node:node /app/dist ./dist
-COPY --from=build --chown=node:node /app/node_modules ./node_modules
-CMD ["node", "dist/src/main.js"]
+FROM nginx:stable-alpine as prod
+COPY --from=build --chown=node:node /app/dist /usr/share/nginx/html
+# COPY --from=build --chown=node:node /app/node_modules ./node_modules
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

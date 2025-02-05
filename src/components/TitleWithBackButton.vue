@@ -8,6 +8,7 @@ const props = defineProps<{
 <template>
   <div id="title-with-back-button">
     <PrimeButton
+      data-cy-role="back"
       icon="pi pi-arrow-left"
       variant="text"
       rounded

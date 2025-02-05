@@ -122,7 +122,7 @@ const onFormSubmit = (event: FormSubmitEvent) => {
           >{{ $form.summary.error?.message }}</PrimeMessage
         >
       </div>
-      <PrimeButton :disabled="loading" :loading type="submit">Submit</PrimeButton>
+      <PrimeButton :disabled="loading" :loading type="submit" data-cy-role="submit-add-article">Submit</PrimeButton>
     </PrimeForm>
   </div>
 </template>

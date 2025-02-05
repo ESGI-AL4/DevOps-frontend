@@ -59,6 +59,10 @@ jobs:
                 - "5432:5432"
               volumes:
                 - db_data:/var/lib/postgresql/data
+              env:
+                POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+                POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+                POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
             api:
               image: baguette42/devops_back:latest
               env:

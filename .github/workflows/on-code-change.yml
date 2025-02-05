@@ -86,6 +86,7 @@ jobs:
               shell: bash
               run: |
                 cd tests
+                chmod +x ./wait-services.sh
                 ./wait-services.sh 
             - name: Run e2e tests
               run: |

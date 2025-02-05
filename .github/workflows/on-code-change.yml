@@ -82,6 +82,11 @@ jobs:
               run: |
                 cd tests
                 npm install
+            - name: Wait for servicesto be up
+              shell: bash
+              run: |
+                cd tests
+                ./wait-services.sh 
             - name: Run e2e tests
               run: |
                 cd tests

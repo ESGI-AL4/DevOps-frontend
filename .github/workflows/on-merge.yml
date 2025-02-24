@@ -32,7 +32,7 @@ jobs:
               name: unit-test-report
               path: ./html
     build:
-        needs: static-analysis
+        needs: test
         name: build the project
         runs-on: ubuntu-latest
         steps:

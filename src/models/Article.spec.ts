@@ -11,7 +11,7 @@ describe('Article model', () => {
     });
 
     expect(article.id).toStrictEqual(1);
-    expect(article.title).toStrictEqual('Titlee');
+    expect(article.title).toStrictEqual('Title');
     expect(article.subtitle).toStrictEqual('Subtitle');
     expect(article.summary).toStrictEqual('Summary');
   });

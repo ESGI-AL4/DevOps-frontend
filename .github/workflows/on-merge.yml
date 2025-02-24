@@ -24,13 +24,17 @@ jobs:
           - name: Install dependencies
             shell: bash
             run: npm install
-          - name: Run tests
+          - name: Run tests with coverage
             shell: bash
             run: npm run test:ci
           - uses: actions/upload-artifact@v4
             with:
               name: unit-test-report
               path: ./html
+          - uses: actions/upload-artifact@v4
+            with:
+              name: coverage-report
+              path: ./coverage
     build:
         needs: test
         name: build the project

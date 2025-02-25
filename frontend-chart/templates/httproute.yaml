@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .Values.front.appName }}-httproute
+  namespace: {{ .Release.Namespace }}
+spec:
+  parentRefs:
+    - name: http-gateway  # Nom de la gateway globale fourni dans le cours
+      namespace: nginx-gateway
+  hostnames:
+    - {{ .Values.front.host }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: {{ .Values.front.appName }}-service
+          port: {{ .Values.front.servicePort }}

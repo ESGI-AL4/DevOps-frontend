@@ -4,5 +4,6 @@ front:
   containerPort: 80
   servicePort: 80
   appName: front
+  host: "frontend-baguette.jbienvenu.fr"
   env:
     VITE_BACKEND_API: "http://backend:8000"

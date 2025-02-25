@@ -54,6 +54,7 @@ jobs:
                 push: true
                 tags: ${{ secrets.DOCKER_USERNAME }}/devops_front:latest
     sonarqube:
+      needs: build
       name: SonarQube
       runs-on: ubuntu-latest
       steps:
@@ -69,7 +70,7 @@ jobs:
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     test-e2e:
-      needs: build
+      needs: sonarqube
       name: E2E test
       runs-on: ubuntu-latest
       services:

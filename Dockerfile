@@ -10,7 +10,7 @@ COPY --chown=node:node package.json package-lock.json ./
 FROM base as build
 RUN npm ci
 COPY --chown=node:node . .
-RUN npm run build
+RUN npm run build-only
 
 # Production
 FROM nginx:stable-alpine as prod

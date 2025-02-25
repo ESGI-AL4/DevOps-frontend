@@ -119,6 +119,15 @@ jobs:
             run: |
               cd tests
               npm run e2e:ci
+    update-constants:
+      needs: test-e2e
+      name: Update constant.json
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Update constant.json for production
+          run: |
+            sed -i 's/"backendUrl": ".*"/"backendUrl": "https:\/\/backend-baguette.jbienvenu.fr"/' public/constant.json
     helm-deploy:
       needs: test-e2e
       name: Helm Deploy

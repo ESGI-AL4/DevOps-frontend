@@ -1,5 +1,7 @@
+import config from "../public/constant.json";
+
 const CONFIG = {
-  backendUrl: import.meta.env.VITE_BACKEND_API,
+  backendUrl: config.backendUrl,
 };
 
 export default CONFIG;

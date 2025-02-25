@@ -129,7 +129,7 @@ jobs:
           run: |
             sed -i 's/"backendUrl": ".*"/"backendUrl": "https:\/\/backend-baguette.jbienvenu.fr"/' public/constant.json
     helm-deploy:
-      needs: test-e2e
+      needs: update-constants
       name: Helm Deploy
       runs-on: ubuntu-latest
       steps:

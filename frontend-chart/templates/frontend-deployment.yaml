@@ -23,4 +23,7 @@ spec:
             - containerPort: {{ .Values.front.containerPort }}
           env:
             - name: VITE_BACKEND_API
-              value: "{{ .Values.front.env.VITE_BACKEND_API }}"
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.front.appName }}-configmap
+                  key: VITE_BACKEND_API

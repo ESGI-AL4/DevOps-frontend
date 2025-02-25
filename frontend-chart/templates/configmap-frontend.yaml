@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.front.appName }}-configmap
+data:
+  VITE_BACKEND_API: "{{ .Values.front.env.VITE_BACKEND_API }}"

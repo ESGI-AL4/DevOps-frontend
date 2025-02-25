@@ -1,9 +1,9 @@
 front:
   image: baguette42/devops_front:latest
   replicaCount: 1
-  containerPort: 8000
-  servicePort: 80
+  containerPort: 80
+  servicePort: 443
   appName: front
   host: "frontend-baguette.jbienvenu.fr"
   env:
-    VITE_BACKEND_API: "http://backend-baguette.jbienvenu.fr/"
+    VITE_BACKEND_API: "http://backend:8000"

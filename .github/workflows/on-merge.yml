@@ -57,15 +57,15 @@ jobs:
       name: SonarQube
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v4
           with:
             fetch-depth: 0
         - name: SonarQubeScan
           uses: SonarSource/sonarqube-scan-action@v4
           with:
             args: >
-              -Dsonar.projectKey=esgi-al4
-              -Dsonar.organization=ESGI-AL4
+              -Dsonar.projectKey=ESGI-AL4_DevOps-frontend
+              -Dsonar.organization=esgi-al4
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     test-e2e:

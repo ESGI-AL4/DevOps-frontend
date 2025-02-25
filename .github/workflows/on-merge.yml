@@ -117,3 +117,26 @@ jobs:
             run: |
               cd tests
               npm run e2e:ci
+    helm-deploy:
+      needs: test-e2e
+      name: Helm Deploy
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        # Installation de Helm
+        - name: Install Helm
+          uses: azure/setup-helm@v4
+
+        - name: Configure Kubeconfig
+          uses: azure/k8s-set-context@v4
+          with:
+            method: kubeconfig
+            kubeconfig: ${{ secrets.KUBECONFIG }}
+
+        # Déploiement via Helm (assurez-vous que votre chart se trouve dans le dossier "helm-chart")
+        - name: Deploy Front using Helm
+          run: |
+            helm upgrade --install frontend-chart ./frontend-chart \
+              --namespace baguette-groupe-3

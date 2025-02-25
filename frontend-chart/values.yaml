@@ -6,4 +6,4 @@ front:
   appName: front
   host: "frontend-baguette.jbienvenu.fr"
   env:
-    VITE_BACKEND_API: "https://backend:8000"
+    VITE_BACKEND_API: "https://backend-baguette.jbienvenu.fr"

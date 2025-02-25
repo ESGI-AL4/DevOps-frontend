@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Values.front.appName }}-deployment
+  labels:
+    app: {{ .Values.front.appName }}
+spec:
+  replicas: {{ .Values.front.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.front.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.front.appName }}
+    spec:
+      containers:
+        - name: {{ .Values.front.appName }}
+          image: {{ .Values.front.image }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.front.containerPort }}
+          env:
+            - name: VITE_BACKEND_API
+              value: "{{ .Values.front.env.VITE_BACKEND_API }}"

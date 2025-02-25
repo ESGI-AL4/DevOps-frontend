@@ -1,0 +1,8 @@
+front:
+  image: baguette42/devops_front:latest
+  replicaCount: 1
+  containerPort: 80
+  servicePort: 80
+  appName: front
+  env:
+    VITE_BACKEND_API: "http://backend:8000"

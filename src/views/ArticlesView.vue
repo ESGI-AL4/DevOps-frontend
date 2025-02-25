@@ -21,6 +21,7 @@ const navigateToArticlesForm = () => {
 
 onMounted(() => {
   const fetchArticles = async () => {
+    console.log(`${CONFIG.backendUrl}`);
     try {
       const response = await fetch(`${CONFIG.backendUrl}/articles`, {
         method: 'GET',

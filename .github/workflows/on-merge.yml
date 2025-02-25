@@ -27,16 +27,38 @@ jobs:
           - name: Run tests with coverage
             shell: bash
             run: npm run test:ci
-          - uses: actions/upload-artifact@v4
-            with:
-              name: unit-test-report
-              path: ./html
-          - uses: actions/upload-artifact@v4
-            with:
-              name: coverage-report
-              path: ./coverage
+    sonarqube:
+      needs: test
+      name: SonarQube
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+        - name: SonarQubeScan
+          uses: SonarSource/sonarqube-scan-action@v4
+          with:
+            args: >
+              -Dsonar.projectKey=ESGI-AL4_DevOps-frontend
+              -Dsonar.organization=esgi-al4
+              -Dsonar.issuesReport.html.enable=true
+              -Dsonar.issuesReport.html.location=./sonar-report.html
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        - uses: actions/upload-artifact@v4
+          with:
+            name: unit-test-report
+            path: ./html
+        - uses: actions/upload-artifact@v4
+          with:
+            name: coverage-report
+            path: ./coverage
+        - uses: actions/upload-artifact@v4
+          with:
+            name: sonar-report
+            path: sonar-report.html
     build:
-        needs: test
+        needs: sonarqube
         name: build the project
         runs-on: ubuntu-latest
         steps:
@@ -53,24 +75,8 @@ jobs:
                 file: ./Dockerfile
                 push: true
                 tags: ${{ secrets.DOCKER_USERNAME }}/devops_front:latest
-    sonarqube:
-      needs: build
-      name: SonarQube
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
-        - name: SonarQubeScan
-          uses: SonarSource/sonarqube-scan-action@v4
-          with:
-            args: >
-              -Dsonar.projectKey=ESGI-AL4_DevOps-frontend
-              -Dsonar.organization=esgi-al4
-          env:
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     test-e2e:
-      needs: sonarqube
+      needs: build
       name: E2E test
       runs-on: ubuntu-latest
       services:

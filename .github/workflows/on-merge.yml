@@ -62,6 +62,10 @@ jobs:
             fetch-depth: 0
         - name: SonarQubeScan
           uses: SonarSource/sonarqube-scan-action@v4
+          with:
+            args: >
+              -Dsonar.projectKey=esgi-al4
+              -Dsonar.organization=ESGI-AL4
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     test-e2e:

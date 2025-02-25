@@ -49,14 +49,8 @@ jobs:
             args: >
               -Dsonar.projectKey=ESGI-AL4_DevOps-frontend
               -Dsonar.organization=esgi-al4
-              -Dsonar.issuesReport.html.enable=true
-              -Dsonar.issuesReport.html.location=./sonar-report.html
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        - uses: actions/upload-artifact@v4
-          with:
-            name: sonar-report
-            path: sonar-report.html
     build:
         needs: sonarqube
         name: build the project

@@ -15,6 +15,7 @@ export async function loadConfig(): Promise<AppConfig> {
   } catch (error) {
     console.error("Erreur lors du chargement de la configuration :", error);
   }
+  console.log("Configuration chargée :", config);
   return config;
 }
 

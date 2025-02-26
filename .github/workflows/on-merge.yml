@@ -46,7 +46,6 @@ jobs:
           with:
             fetch-depth: 0
         - name: SonarQubeScan
-          id: sonar_scan
           uses: SonarSource/sonarqube-scan-action@v5
           with:
             args: >
@@ -56,15 +55,16 @@ jobs:
                           # Extraction de l'URL de fin d'analyse
                           SCAN_URL=$(grep "ANALYSIS SUCCESSFUL, you can find the results at:" sonar_output.txt | sed 's/.*results at: //')
                           echo "Scan URL: $SCAN_URL"
-                          echo "$SCAN_URL" > ${SCAN_URL}.txt
-                          echo "scan_url=${SCAN_URL}.txt" >> $GITHUB_OUTPUT
+                          echo "$SCAN_URL" > $SCAN_URL.txt
+                          echo "scan_url=$SCAN_URL" >> $GITHUB_OUTPUT
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
         - name: Upload SonarCloud URL artifact
           uses: actions/upload-artifact@v4
           with:
             name: sonar-url
-            path: ${{ steps.sonar_scan.outputs.scan_url }}
+            path: https://sonarcloud.io/dashboard?id=ESGI-AL4_DevOps-frontend&branch=main.txt
 
     build-e2e:
       needs: sonarqube

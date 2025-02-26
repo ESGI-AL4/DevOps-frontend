@@ -72,8 +72,17 @@ jobs:
             push: true
             tags: ${{ secrets.DOCKER_USERNAME }}/devops_front_e2e:latest
             build-args: ENV_FILE=.env.development
-    build-deploy:
+    update-constants:
       needs: sonarqube
+      name: Update constant.json
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Update constant.json for production
+          run: |
+            sed -i 's/"backendUrl": "http://localhost:8000"/"backendUrl": "https:\/\/backend-baguette.jbienvenu.fr"/' public/constant.json
+    build-deploy:
+      needs: update-constants
       name: Build Docker image for Production
       runs-on: ubuntu-latest
       steps:

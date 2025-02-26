@@ -51,22 +51,14 @@ jobs:
             args: >
               -Dsonar.projectKey=ESGI-AL4_DevOps-frontend
               -Dsonar.organization=esgi-al4
+              > sonar_output.txt 2>&1
+                          # Extraction de l'URL de fin d'analyse
+                          SCAN_URL=$(grep "ANALYSIS SUCCESSFUL, you can find the results at:" sonar_output.txt | sed 's/.*results at: //')
+                          echo "Scan URL: $SCAN_URL"
+                          echo "$SCAN_URL" > sonar_url.txt
+                          echo "scan_url=$SCAN_URL" >> $GITHUB_OUTPUT
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        - name: Run SonarCloud Scan and capture URL
-          id: sonar_scan
-          run: |
-            sonar-scanner \
-              -Dsonar.projectKey=ESGI-AL4_DevOps-frontend \
-              -Dsonar.organization=esgi-al4 \
-              -Dsonar.sources=. \
-              > sonar_output.txt 2>&1
-            # Extraction de l'URL de fin d'analyse
-            SCAN_URL=$(grep "ANALYSIS SUCCESSFUL, you can find the results at:" sonar_output.txt | sed 's/.*results at: //')
-            echo "Scan URL: $SCAN_URL"
-            echo "$SCAN_URL" > sonar_url.txt
-            echo "scan_url=$SCAN_URL" >> $GITHUB_OUTPUT
-
         - name: Upload SonarCloud URL artifact
           uses: actions/upload-artifact@v4
           with:

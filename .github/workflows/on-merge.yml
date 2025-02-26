@@ -81,6 +81,7 @@ jobs:
         - name: Update constant.json for production
           run: |
             sed -i 's|"backendUrl": "http://localhost:8000"|"backendUrl": "https://backend-baguette.jbienvenu.fr"|' public/constant.json
+            cat public/constant.json
     build-deploy:
       needs: update-constants
       name: Build Docker image for Production

@@ -34,5 +34,5 @@ app.component('PrimeFloatLabel', FloatLabel);
 app.component('PrimeSkeleton', Skeleton);
 
 loadConfig().then(() => {
-  createApp(App).mount('#app');
+  app.mount('#app');
 });

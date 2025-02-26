@@ -16,6 +16,7 @@ import {
   ToastService,
 } from 'primevue';
 import { Form } from '@primevue/forms';
+import { loadConfig } from '@/config';
 
 const app = createApp(App);
 
@@ -32,4 +33,6 @@ app.component('PrimeTextArea', Textarea);
 app.component('PrimeFloatLabel', FloatLabel);
 app.component('PrimeSkeleton', Skeleton);
 
-app.mount('#app');
+loadConfig().then(() => {
+  createApp(App).mount('#app');
+});

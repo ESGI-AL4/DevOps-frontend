@@ -46,13 +46,33 @@ jobs:
           with:
             fetch-depth: 0
         - name: SonarQubeScan
-          uses: SonarSource/sonarqube-scan-action@v4
+          uses: SonarSource/sonarqube-scan-action@v5
           with:
             args: >
               -Dsonar.projectKey=ESGI-AL4_DevOps-frontend
               -Dsonar.organization=esgi-al4
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        - name: Run SonarCloud Scan and capture URL
+          id: sonar_scan
+          run: |
+            sonar-scanner \
+              -Dsonar.projectKey=ESGI-AL4_DevOps-frontend \
+              -Dsonar.organization=esgi-al4 \
+              -Dsonar.sources=. \
+              > sonar_output.txt 2>&1
+            # Extraction de l'URL de fin d'analyse
+            SCAN_URL=$(grep "ANALYSIS SUCCESSFUL, you can find the results at:" sonar_output.txt | sed 's/.*results at: //')
+            echo "Scan URL: $SCAN_URL"
+            echo "$SCAN_URL" > sonar_url.txt
+            echo "scan_url=$SCAN_URL" >> $GITHUB_OUTPUT
+
+        - name: Upload SonarCloud URL artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: sonar-url
+            path: sonar_url.txt
+
     build-e2e:
       needs: sonarqube
       name: Build Docker image for E2E

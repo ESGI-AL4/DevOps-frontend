@@ -6,7 +6,10 @@ import TitleWithBackButton from '@/components/TitleWithBackButton.vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'primevue';
 import type { ArticleApi } from '@/models/ArticleApi';
-import CONFIG from '@/config';
+import { getConfig } from '@/config';
+
+const CONFIG = getConfig();
+
 
 const isLoadingArticles = ref(true);
 const articles = ref<Article[]>([]);

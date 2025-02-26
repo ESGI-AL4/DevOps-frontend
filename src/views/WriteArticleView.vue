@@ -7,7 +7,10 @@ import type { FormSubmitEvent } from '@primevue/forms';
 import TitleWithBackButton from '@/components/TitleWithBackButton.vue';
 import { useRouter } from 'vue-router';
 import type { CreateArticleApi } from '@/models/ArticleApi';
-import CONFIG from '@/config';
+import { getConfig } from '@/config';
+
+const CONFIG = getConfig();
+
 
 const toast = useToast();
 

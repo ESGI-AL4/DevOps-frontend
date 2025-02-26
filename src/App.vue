@@ -2,6 +2,13 @@
 import { RouterView } from 'vue-router';
 import MyHeader from '@/components/MyHeader.vue';
 import { Toast } from 'primevue';
+import { loadConfig } from '@/config';
+import { createApp } from 'vue';
+import App from '@/App.vue';
+
+loadConfig().then(() => {
+  createApp(App).mount('#app');
+});
 </script>
 
 <template>

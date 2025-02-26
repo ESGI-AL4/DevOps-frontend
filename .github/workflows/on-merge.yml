@@ -80,7 +80,7 @@ jobs:
         - uses: actions/checkout@v4
         - name: Update constant.json for production
           run: |
-            sed -i 's/"backendUrl": "http://localhost:8000"/"backendUrl": "https:\/\/backend-baguette.jbienvenu.fr"/' public/constant.json
+            sed -i 's|"backendUrl": "http://localhost:8000"|"backendUrl": "https://backend-baguette.jbienvenu.fr"|' public/constant.json
     build-deploy:
       needs: update-constants
       name: Build Docker image for Production

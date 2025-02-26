@@ -53,26 +53,46 @@ jobs:
               -Dsonar.organization=esgi-al4
           env:
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    build:
-        needs: sonarqube
-        name: build the project
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - name: Login to docker
-              uses: docker/login-action@v3
-              with:
-                username: ${{ secrets.DOCKER_USERNAME }}
-                password: ${{ secrets.DOCKER_PASSWORD }}
-            - name: Build the docker image
-              uses: docker/build-push-action@v2
-              with:
-                context: .
-                file: ./Dockerfile
-                push: true
-                tags: ${{ secrets.DOCKER_USERNAME }}/devops_front:latest
+    build-e2e:
+      needs: sonarqube
+      name: Build Docker image for E2E
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Login to Docker
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+        - name: Build the Docker image for E2E
+          uses: docker/build-push-action@v2
+          with:
+            context: .
+            file: ./Dockerfile
+            push: true
+            tags: ${{ secrets.DOCKER_USERNAME }}/devops_front_e2e:latest
+            build-args: ENV_FILE=.env.development
+    build-deploy:
+      needs: sonarqube
+      name: Build Docker image for Production
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Login to Docker
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+        - name: Build the Docker image for Production
+          uses: docker/build-push-action@v2
+          with:
+            context: .
+            file: ./Dockerfile
+            push: true
+            tags: ${{ secrets.DOCKER_USERNAME }}/devops_front:latest
+            build-args: ENV_FILE=.env.production
     test-e2e:
-      needs: build
+      needs: build-e2e
       name: E2E test
       runs-on: ubuntu-latest
       services:
@@ -98,7 +118,7 @@ jobs:
             ports:
               - "8000:8000"
           web:
-            image: baguette42/devops_front:latest
+            image: baguette42/devops_front_e2e:latest
             env:
               VITE_BACKEND_API: http://api:8000
             ports:
@@ -119,35 +139,9 @@ jobs:
             run: |
               cd tests
               npm run e2e:ci
-    update-constants:
-      needs: test-e2e
-      name: Update constant.json
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - name: Update constant.json for production
-          run: |
-            sed -i 's/"backendUrl": ".*"/"backendUrl": "https:\/\/backend-baguette.jbienvenu.fr"/' public/constant.json
-    build-new-constant:
-      needs: update-constants
-      name: build the project
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - name: Login to docker
-          uses: docker/login-action@v3
-          with:
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
-        - name: Build the docker image
-          uses: docker/build-push-action@v2
-          with:
-            context: .
-            file: ./Dockerfile
-            push: true
-            tags: ${{ secrets.DOCKER_USERNAME }}/devops_front:latest
+
     helm-deploy:
-      needs: build-new-constant
+      needs: [ build-deploy, test-e2e ]
       name: Helm Deploy
       runs-on: ubuntu-latest
       steps:
